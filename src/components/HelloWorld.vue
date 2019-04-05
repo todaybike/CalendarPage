@@ -6,7 +6,8 @@
     <button v-on:click="cpage2()">다음 달 가져오기</button><br>
     <button v-on:click="cpage3()">이전 달 가져오기</button>
     <hr>
-    <div class="log"><pre>{{ logs1 }}</pre></div>
+    <div class="dlog" v-html="dlog"></div>
+    <div class="dlog"><pre>{{ logs1 }}</pre></div>
     <hr>
 
     <select v-model="wyear">
@@ -20,18 +21,18 @@
       <option value=2021>2021</option>
     </select>
     <select v-model="wmonth">
-      <option value=00>00</option>
-      <option value=01>01</option>
-      <option value=02>02</option>
-      <option value=03>03</option>
-      <option value=04>04</option>
-      <option value=05>05</option>
-      <option value=06>06</option>
-      <option value=07>07</option>
-      <option value=08>08</option>
-      <option value=09>09</option>
-      <option value=10>10</option>
-      <option value=11>11</option>
+      <option value=00>01</option>
+      <option value=01>02</option>
+      <option value=02>03</option>
+      <option value=03>04</option>
+      <option value=04>05</option>
+      <option value=05>06</option>
+      <option value=06>07</option>
+      <option value=07>08</option>
+      <option value=08>09</option>
+      <option value=09>10</option>
+      <option value=10>11</option>
+      <option value=11>12</option>
     </select>
     <select v-model="wday">
       <option value=01>01</option>
@@ -72,7 +73,8 @@
     <button v-on:click="cpage4()">월 정보 갖고와라 </button>
     <button v-on:click="cpage5()">일이 포함된 주 단위 정보 갖고와라 </button>
     <hr>
-    <div class="log"><pre>{{ logs2 }}</pre></div>
+    <div class="dlog" v-html="dlog2"></div>
+    <div class="dlog"><pre>{{ logs2 }}</pre></div>
     </div>
   </div>
 
@@ -81,7 +83,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { HCalendarPage, HWeek } from './HCalendar';
+import { HCalendarPage, HWeek, HDay, HCalendarConst } from './HCalendar';
 
 @Component
 export default class HelloWorld extends Vue {
@@ -90,9 +92,14 @@ export default class HelloWorld extends Vue {
   page = new HCalendarPage();
   logs1 : string = '';
   logs2 : string = '';
+  dlog  : string = '';
+  dlog2  : string = '';
   wyear : string = '2019';
   wmonth : string = '03';
   wday : string = '05';
+  days : Array<HDay> = [];
+
+  week : HWeek = new HWeek();
 
   /**
    * 현재 날짜를 기준으로 달력 페이지를 가져 온다.
@@ -122,9 +129,8 @@ export default class HelloWorld extends Vue {
   }
 
   public cpage5() {
-    let week = new HWeek();
-    week.set( parseInt(this.wyear), parseInt(this.wmonth), parseInt(this.wday) );
-    this.log2( week.toString() );
+    this.week.set( parseInt(this.wyear), parseInt(this.wmonth), parseInt(this.wday) );
+    this.log2( this.week.toString() );
   }
 
   public log1( line: string ) {
@@ -132,6 +138,29 @@ export default class HelloWorld extends Vue {
     let aline = line.replace(/ /g, '');
     let bline = aline.replace(/>/g, '>\n');
     this.logs1 = bline.replace(/\,/g, '\n');
+
+    let dline:string = "";
+    // this.days = this.page.days;
+    let d:number = 0;
+    for ( let w=0; w<this.page.countWeek; w++ ) {
+      for ( let i=0; i<7; i++ ) {
+        let da = this.page.days[d++];
+        //
+        // dline += `<div style="display: inline-block; font-size:10pt; border: solid 2px red; width:40px; height: 40px;">${da.month+1}/${da.date}</div> `;
+        let dc = "dlog_date";
+        switch ( da.kind ) {
+          case HCalendarConst.KIND_DATE_NORMAL : dc = "dlog_date_normal"; break;
+          case HCalendarConst.KIND_DATE_SUN : dc = "dlog_date_sun"; break;
+          case HCalendarConst.KIND_DATE_SAT : dc = "dlog_date_sat"; break;
+          case HCalendarConst.KIND_DATE_EVENT : dc = "dlog_date_event"; break;
+          case HCalendarConst.KIND_DATE_NO_MONTH : dc = "dlog_date_no_month"; break;
+        }
+        dline += `<div class="${dc}">${da.month+1}/${da.date}</div> `;
+      }
+      dline += "<br>\n";
+    }
+
+    this.dlog = dline;
   }
 
   public log2( line: string ) {
@@ -139,6 +168,16 @@ export default class HelloWorld extends Vue {
     let aline = line.replace(/ /g, '');
     let bline = aline.replace(/>/g, '>\n');
     this.logs2 = bline.replace(/\,/g, '\n');
+
+    let dline:string = "";
+    for ( let i=0; i<7; i++ ) {
+        let da = this.week.days[i];
+        //
+        // dline += `<div style="display: inline-block; font-size:10pt; border: solid 2px red; width:40px; height: 40px;">${da.month+1}/${da.date}</div> `;
+        dline += `<div class="dlog_date">${da.month+1}/${da.date}</div> `;
+    }
+
+    this.dlog2 = dline;
   }
 }
 </script>
@@ -161,4 +200,15 @@ a {
 }
 .cpage { text-align: left; }
 .log { font-size: 12pt; }
+.dlog { width: 100%; }
+.dlog {
+  /deep/ .dlog_date { display: inline-block; font-size:10pt; border: solid 2px black; width:40px; height:50px;  }
+  /deep/ .dlog_date_normal { display: inline-block; font-size:10pt; border: solid 2px black; width:40px; height:50px;  }
+  /deep/ .dlog_date_sun { display: inline-block; font-size:10pt; border: solid 2px red; width:40px; height:50px;  }
+  /deep/ .dlog_date_sat { display: inline-block; font-size:10pt; border: solid 2px blue; width:40px; height:50px;  }
+  /deep/ .dlog_date_event { display: inline-block; font-size:10pt; border: solid 2px blue; width:40px; height:50px;  }
+  /deep/ .dlog_date_no_month { display: inline-block; font-size:8pt; border: solid 2px lightgrey; width:40px; height:50px;  }
+ 
+}
+
 </style>

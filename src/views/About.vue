@@ -9,7 +9,7 @@
       <li> year : 년, <small>let d = HDay(); day.year=2019; a=day.year;</small></li>
       <li> month : 월, <small>0~11, day.month=10; a=day.month;</small></li>
       <li> date : 일, <small>day.date=10; a.day=day.date;</small></li>
-      <li> kind : 종류, <small>1=평일, 0=일요일, 6=토툐일, 7=기념일, 8=이달아님</small> </li>
+      <li> kind : 종류, <small>1=평일, 0=일요일, 6=토요일, 7=기념일, 8=이달아님</small> </li>
       </ul>
     <h3>HWeek</h3>
       <ul>
@@ -29,7 +29,7 @@
         <li>date: <small>get/set w.date;</small></li>
         <li>start: <small>get/set w.start;</small></li>
         <li>end: <small>get/set w.end;</small></li>
-        <li>now: <small>w.now();</small></li>
+        <li>now: 현재 시간 기준으로 세팅<small>w.now();</small></li>
         <li>set: <small>w.set(2019.4.6);</small></li>
         <li>prev: 현재 월을 기준으로 이전 달 <small>w.prev();</small></li>
         <li>next: 현재 월을 기준으로 다음 달 <small>w.next();</small></li>
