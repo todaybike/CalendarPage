@@ -68,7 +68,7 @@
       <option value=29>29</option>
       <option value=30>30</option>
       <option value=31>31</option>
-      
+
     </select>
     <button v-on:click="cpage4()">월 정보 갖고와라 </button>
     <button v-on:click="cpage5()">일이 포함된 주 단위 정보 갖고와라 </button>
@@ -78,107 +78,144 @@
     </div>
   </div>
 
-  
+
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { HCalendarPage, HWeek, HDay, HCalendarConst } from './HCalendar';
+import axios from 'axios';
+
+import { HCalendarPage } from './HCalendar';
+import { HCalendarWeek } from './HCalendarWeek';
+import { HCalendarDay } from './HCalendarDay';
+import { HCalendarConst } from './HCalendarConst';
 
 @Component
 export default class HelloWorld extends Vue {
-  @Prop() private msg!: string;
 
-  page = new HCalendarPage();
-  logs1 : string = '';
-  logs2 : string = '';
-  dlog  : string = '';
-  dlog2  : string = '';
-  wyear : string = '2019';
-  wmonth : string = '03';
-  wday : string = '05';
-  days : Array<HDay> = [];
+	public page = new HCalendarPage();
+	public logs1: string = '';
+	public logs2: string = '';
+	public dlog: string = '';
+	public dlog2: string = '';
+	public wyear: string = '2019';
+	public wmonth: string = '03';
+	public wday: string = '05';
+	public days: HCalendarDay[] = [];
+	public week: HCalendarWeek = new HCalendarWeek();
 
-  week : HWeek = new HWeek();
+	@Prop() private msg!: string;
 
-  /**
-   * 현재 날짜를 기준으로 달력 페이지를 가져 온다.
-   */
-  public cpage1() {
-    this.page.now();    // 현재 날짜를 가져 온다.
-    this.log1( this.page.toString() );
+	/**
+	 * 현재 날짜를 기준으로 달력 페이지를 가져 온다.
+	 */
+	public async cpage1() {
+		this.page.now();    // 현재 날짜를 가져 온다.
 
-  }
+		// 서버에서 데이터를 가져오게 하자.
+		await axios({
+			method: 'GET',
+			url: 'http://localhost:8080/calendar.jsp',
+			params: { line: 1 },
 
-  /**
-   * 페이지의 현재 날짜를 기준으로 다음 달을 가져온다.
-   */
-  public cpage2() {
-    this.page.next();   // 다음 달력을 가져 온다.
-    this.log1( this.page.toString() );
-  }
+			})
+			.then( (res: any) => {
+				// const json = JSON.parse(res.data);
+				// console.log(res.data);
 
-  public cpage3() {
-    this.page.prev();   // 이전 달을 가져 온다.
-    this.log1( this.page.toString() );
-  }
+				const json = res.data.list;
 
-  public cpage4() {
-    this.page.set( parseInt(this.wyear), parseInt(this.wmonth) );
-    this.log2( this.page.toString() );
-  }
+// json 내역을 돌면서 세팅하자.
+				let i = 0;
+				for ( const j of json ) {
+					this.page.setDate( Number(j.year), Number(j.month), Number(j.date), j.sum, j.count );
+					i++;
+				}
 
-  public cpage5() {
-    this.week.set( parseInt(this.wyear), parseInt(this.wmonth), parseInt(this.wday) );
-    this.log2( this.week.toString() );
-  }
+			})
+			.catch( (ex: any) => {
+				console.log('error:' + ex );
+				// this.stringServerEncoded = '';
+			});
 
-  public log1( line: string ) {
-    // console.log( line );
-    let aline = line.replace(/ /g, '');
-    let bline = aline.replace(/>/g, '>\n');
-    this.logs1 = bline.replace(/\,/g, '\n');
+		this.log1( this.page.toString() );
 
-    let dline:string = "";
-    // this.days = this.page.days;
-    let d:number = 0;
-    for ( let w=0; w<this.page.countWeek; w++ ) {
-      for ( let i=0; i<7; i++ ) {
-        let da = this.page.days[d++];
-        //
-        // dline += `<div style="display: inline-block; font-size:10pt; border: solid 2px red; width:40px; height: 40px;">${da.month+1}/${da.date}</div> `;
-        let dc = "dlog_date";
-        switch ( da.kind ) {
-          case HCalendarConst.KIND_DATE_NORMAL : dc = "dlog_date_normal"; break;
-          case HCalendarConst.KIND_DATE_SUN : dc = "dlog_date_sun"; break;
-          case HCalendarConst.KIND_DATE_SAT : dc = "dlog_date_sat"; break;
-          case HCalendarConst.KIND_DATE_EVENT : dc = "dlog_date_event"; break;
-          case HCalendarConst.KIND_DATE_NO_MONTH : dc = "dlog_date_no_month"; break;
-        }
-        dline += `<div class="${dc}">${da.month+1}/${da.date}</div> `;
-      }
-      dline += "<br>\n";
-    }
+	}
 
-    this.dlog = dline;
-  }
+	/**
+	 * 페이지의 현재 날짜를 기준으로 다음 달을 가져온다.
+	 */
+	public cpage2() {
+		this.page.next();   // 다음 달력을 가져 온다.
+		this.log1( this.page.toString() );
+	}
 
-  public log2( line: string ) {
-    // console.log( line );
-    let aline = line.replace(/ /g, '');
-    let bline = aline.replace(/>/g, '>\n');
-    this.logs2 = bline.replace(/\,/g, '\n');
+	public cpage3() {
+		this.page.prev();   // 이전 달을 가져 온다.
+		this.log1( this.page.toString() );
+	}
 
-    let dline:string = "";
-    for ( let i=0; i<7; i++ ) {
-        let da = this.week.days[i];
-        //
-        // dline += `<div style="display: inline-block; font-size:10pt; border: solid 2px red; width:40px; height: 40px;">${da.month+1}/${da.date}</div> `;
-        dline += `<div class="dlog_date">${da.month+1}/${da.date}</div> `;
-    }
+	public cpage4() {
+		this.page.init( parseInt(this.wyear, 10), parseInt(this.wmonth, 10) );
+		this.log2( this.page.toString() );
+	}
 
-    this.dlog2 = dline;
-  }
+	public cpage5() {
+		this.week.init( parseInt(this.wyear, 10), parseInt(this.wmonth, 10), parseInt(this.wday, 10) );
+		this.log2( this.week.toString() );
+	}
+
+	public log1( line: string ) {
+		// console.log( line );
+		const aline = line.replace(/ /g, '');
+		const bline = aline.replace(/>/g, '>\n');
+		this.logs1 = bline.replace(/\,/g, '\n');
+
+		let dline: string = '';
+		// this.days = this.page.days;
+		let d: number = 0;
+		for ( let w = 0; w < this.page.countWeek; w++ ) {
+			for ( let i = 0; i < 7; i++ ) {
+				const da = this.page.days[d++];
+				//
+				// dline += `<div style="display: inline-block; font-size:10pt; border:
+				// solid 2px red; width:40px; height: 40px;">${da.month+1}/${da.date}</div> `;
+				let dc = 'dlog_date';
+				switch ( da.kind ) {
+					case HCalendarConst.KIND_DATE_NORMAL : dc = 'dlog_date_normal'; break;
+					case HCalendarConst.KIND_DATE_SUN : dc = 'dlog_date_sun'; break;
+					case HCalendarConst.KIND_DATE_SAT : dc = 'dlog_date_sat'; break;
+					case HCalendarConst.KIND_DATE_EVENT : dc = 'dlog_date_event'; break;
+					case HCalendarConst.KIND_DATE_NO_MONTH : dc = 'dlog_date_no_month'; break;
+				}
+				dline += `<div class="${dc}">${da.month + 1}/${da.date}`
+						+ `<div class="dlog_date_sum">${da.sum}</div>`
+						+ `</div> `;
+			}
+			dline += '<br>\n';
+		}
+
+		this.dlog = dline;
+	}
+
+	public log2( line: string ) {
+		// console.log( line );
+		const aline = line.replace(/ /g, '');
+		const bline = aline.replace(/>/g, '>\n');
+		this.logs2 = bline.replace(/\,/g, '\n');
+
+		let dline: string = '';
+		for ( let i = 0; i < 7; i++ ) {
+				const da = this.week.days[i];
+				//
+				// dline += `<div style="display: inline-block; font-size:10pt; border:
+				// solid 2px red; width:40px; height: 40px;">${da.month+1}/${da.date}
+				// </ div> `;
+				dline += `<div class="dlog_date">${da.month + 1}/${da.date}</div> `;
+		}
+
+		this.dlog2 = dline;
+	}
 }
 </script>
 
@@ -207,8 +244,9 @@ a {
   /deep/ .dlog_date_sun { display: inline-block; font-size:10pt; border: solid 2px red; width:40px; height:50px;  }
   /deep/ .dlog_date_sat { display: inline-block; font-size:10pt; border: solid 2px blue; width:40px; height:50px;  }
   /deep/ .dlog_date_event { display: inline-block; font-size:10pt; border: solid 2px blue; width:40px; height:50px;  }
-  /deep/ .dlog_date_no_month { display: inline-block; font-size:8pt; border: solid 2px lightgrey; width:40px; height:50px;  }
- 
+  /deep/ .dlog_date_no_month { display: inline-block; font-size:8pt; border:
+														solid 2px lightgrey; width:40px; height:50px;  }
+	/deep/ .dlog_date_sum { font-size:5pt; }
 }
 
 </style>

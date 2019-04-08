@@ -1,4 +1,4 @@
-import { HCalendarPage }  from './HCalendar';
+import { HCalendarPage } from './HCalendar';
 
 console.log('new  -----------------------------------------------------------------------');
 const page = new HCalendarPage(); // page.set( 2019, (3-1) );
