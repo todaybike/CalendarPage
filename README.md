@@ -7,6 +7,7 @@ npm install --save @types/qrcode<br>
 npm install --save jsbarcode<br>
 
 
+
 @types/qrcode 를 설치해도 tslint 에서 지속적으로 에러를 내는데, 옵션으로 들어가는 부분이 잘못 된 듯 한다. @types/qrcode/index.d.ts 파일의 아래 부분을 수정했다.<br>
 
 @types/qrcode/index.d.ts 수정사항
