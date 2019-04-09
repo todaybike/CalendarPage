@@ -16,7 +16,7 @@ npm install --save jsbarcode<br>
 
 QRCodeOptions -> QRCodeRenderersOptions <br>
 문법 체크를 위한 인터페이스 이름을 바꿔 줌.<br>
-<pre>
+<pre style="font-size:8pt">
 /**
  * Draws qr code symbol to canvas.
  */
