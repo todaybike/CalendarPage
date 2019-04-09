@@ -2,30 +2,45 @@
 CalendarPage
 
 
-## Project setup
-```
-npm install
-```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+@types/qrcode/index.d.ts 수정사항
 
-### Compiles and minifies for production
-```
-npm run build
-```
+QRCodeOptions -> QRCodeRenderersOptions 
+문법 체크를 위한 인터페이스 이름을 바꿔 줌.
 
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+/**
+ * Draws qr code symbol to canvas.
+ */
+export function toCanvas(canvasElement: HTMLCanvasElement, text: string | QRCodeSegment[], callback: (error: Error) => void): void;
+/**
+ * Draws qr code symbol to canvas.
+ */
+export function toCanvas(canvasElement: HTMLCanvasElement, text: string | QRCodeSegment[], options?: QRCodeRenderersOptions): Promise<any>;
+/**
+ * Draws qr code symbol to canvas.
+ */
+export function toCanvas(canvasElement: HTMLCanvasElement, text: string | QRCodeSegment[], options: QRCodeRenderersOptions, callback: (error: Error) => void): void;
+/**
+ * Draws qr code symbol to canvas.
+ */
+export function toCanvas(text: string | QRCodeSegment[], callback: (error: Error, canvas: HTMLCanvasElement) => void): void;
+/**
+ * Draws qr code symbol to canvas.
+ */
+export function toCanvas(text: string | QRCodeSegment[], options?: QRCodeRenderersOptions): Promise<any>;
+/**
+ * Draws qr code symbol to canvas.
+ */
+export function toCanvas(text: string | QRCodeSegment[], options: QRCodeRenderersOptions, callback: (error: Error, canvas: HTMLCanvasElement) => void): void;
+/**
+ * Draws qr code symbol to node canvas.
+ */
+export function toCanvas(canvas: any, text: string | QRCodeSegment[], callback: (error: Error) => void): void;
+/**
+ * Draws qr code symbol to node canvas.
+ */
+export function toCanvas(canvas: any, text: string | QRCodeSegment[], options?: QRCodeRenderersOptions): Promise<any>;
+/**
+ * Draws qr code symbol to node canvas.
+ */
+export function toCanvas(canvas: any, text: string | QRCodeSegment[], options: QRCodeRenderersOptions, callback: (error: Error) => void): void;

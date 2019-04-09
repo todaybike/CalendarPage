@@ -5,11 +5,15 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-		"dev": "vue-cli-service build --mode development",
+    "dev": "vue-cli-service build --mode development",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@types/qrcode": "^1.3.2",
+    "canvas": "^2.4.1",
     "core-js": "^2.6.5",
+    "jsbarcode": "^3.11.0",
+    "qrcode": "^1.3.3",
     "vue": "^2.6.6",
     "vue-class-component": "^6.0.0",
     "vue-property-decorator": "^8.0.0",

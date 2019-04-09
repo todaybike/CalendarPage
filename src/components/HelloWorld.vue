@@ -76,6 +76,21 @@
     <div class="dlog" v-html="dlog2"></div>
     <div class="dlog"><pre>{{ logs2 }}</pre></div>
     </div>
+
+		<hr>
+		<h3>QR CODE </h3>
+		<div class="qrcode">
+			
+			<input v-model="qrcodeInput" value="한글로 연습해보자"/> <button v-on:click="cpage6()">QR 그려바바</button><br>
+			<canvas id="qrcodeCanvas" ref="canvas1" width=300 height=300></canvas><br>
+			<br>
+
+			<input v-model="barcodeInput" value="123456789"/> <button v-on:click="cpage7()">BAR 그려바바</button><br>
+			<canvas id="barcodeCanvas" ref="canvas2" width=300 height=300></canvas><br>
+			<br>
+
+		</div>
+
   </div>
 
 
@@ -89,6 +104,9 @@ import { HCalendarPage } from './HCalendar';
 import { HCalendarWeek } from './HCalendarWeek';
 import { HCalendarDay } from './HCalendarDay';
 import { HCalendarConst } from './HCalendarConst';
+import QRCode from 'qrcode';
+import JsBarcode from 'jsbarcode';
+import Canvas from 'canvas';
 
 @Component
 export default class HelloWorld extends Vue {
@@ -103,6 +121,9 @@ export default class HelloWorld extends Vue {
 	public wday: string = '05';
 	public days: HCalendarDay[] = [];
 	public week: HCalendarWeek = new HCalendarWeek();
+
+	public qrcodeInput: string = '한글로 시작해 볼까요 ?';
+	public barcodeInput: string = '20190408110901';
 
 	@Prop() private msg!: string;
 
@@ -163,6 +184,28 @@ export default class HelloWorld extends Vue {
 	public cpage5() {
 		this.week.init( parseInt(this.wyear, 10), parseInt(this.wmonth, 10), parseInt(this.wday, 10) );
 		this.log2( this.week.toString() );
+	}
+
+	public cpage6() {
+		let qrcanvas = document.getElementById('qrcodeCanvas');
+		// let canvas = this.$refs.canvas1.$el;
+		QRCode.toCanvas( qrcanvas, this.qrcodeInput,
+			{ width:300, color:{ dark:"#F43233", light:"#ffffff"}} )
+		.then( (url:any) => { console.log(url); })
+		.catch( (err:any) => {console.error(err); });
+	}
+
+	public cpage7() {
+		let barcanvas = document.getElementById('barcodeCanvas');
+		JsBarcode( barcanvas, this.barcodeInput,
+			{
+				// format: "pharmacode",
+				lineColor: "#0aa",
+				// width:4,
+				height:80,
+				displayValue: true
+			}
+		);
 	}
 
 	public log1( line: string ) {
