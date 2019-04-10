@@ -20,51 +20,51 @@ QRCodeOptions -> QRCodeRenderersOptions <br>
  * Draws qr code symbol to canvas.
  */
 export function toCanvas(canvasElement: HTMLCanvasElement, 
-	text: string | QRCodeSegment[],
-	callback: (error: Error) => void): void;
+  text: string | QRCodeSegment[],
+  callback: (error: Error) => void): void;
 /**
  * Draws qr code symbol to canvas.
  */
 export function toCanvas(canvasElement: HTMLCanvasElement, 
-	text: string | QRCodeSegment[],
-	options?: <strong>QRCodeRenderersOptions</strong>): Promise<any>;
+  text: string | QRCodeSegment[],
+  options?: <strong>QRCodeRenderersOptions</strong>): Promise<any>;
 /**
  * Draws qr code symbol to canvas.
  */
 export function toCanvas(canvasElement: HTMLCanvasElement, 
-	text: string | QRCodeSegment[],
-	options: <strong>QRCodeRenderersOptions</strong>, 
-	callback: (error: Error) => void): void;
+  text: string | QRCodeSegment[],
+  options: <strong>QRCodeRenderersOptions</strong>, 
+  callback: (error: Error) => void): void;
 /**
  * Draws qr code symbol to canvas.
  */
 export function toCanvas(text: string | QRCodeSegment[],
-	callback: (error: Error, canvas: HTMLCanvasElement) => void): void;
+  callback: (error: Error, canvas: HTMLCanvasElement) => void): void;
 /**
  * Draws qr code symbol to canvas.
  */
 export function toCanvas(text: string | QRCodeSegment[], 
-	options?: <strong>QRCodeRenderersOptions</strong>): Promise<any>;
+  options?: <strong>QRCodeRenderersOptions</strong>): Promise<any>;
 /**
  * Draws qr code symbol to canvas.
  */
 export function toCanvas(text: string | QRCodeSegment[], 
-	options: <strong>QRCodeRenderersOptions</strong>, 
-	callback: (error: Error, canvas: HTMLCanvasElement) => void): void;
+  options: <strong>QRCodeRenderersOptions</strong>, 
+  callback: (error: Error, canvas: HTMLCanvasElement) => void): void;
 /**
  * Draws qr code symbol to node canvas.
  */
 export function toCanvas(canvas: any, text: string | QRCodeSegment[], 
-	callback: (error: Error) => void): void;
+  callback: (error: Error) => void): void;
 /**
  * Draws qr code symbol to node canvas.
  */
 export function toCanvas(canvas: any, text: string | QRCodeSegment[], 
-	options?: <strong>QRCodeRenderersOptions)</strong>: Promise<any>;
+  options?: <strong>QRCodeRenderersOptions)</strong>: Promise<any>;
 /**
  * Draws qr code symbol to node canvas.
  */
 export function toCanvas(canvas: any, text: string | QRCodeSegment[], 
-	options: <strong>QRCodeRenderersOptions</strong>, 
-	callback: (error: Error) => void): void;
+  options: <strong>QRCodeRenderersOptions</strong>, 
+  callback: (error: Error) => void): void;
 </pre>
